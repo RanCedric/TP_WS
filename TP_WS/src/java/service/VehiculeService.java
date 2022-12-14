@@ -16,7 +16,8 @@ public class VehiculeService {
     public VehiculeService() {
     }
     public List<ViewVehicule> getAllVehicule() throws Exception{
-        return VehiculeDAO.allVehicule();
+        VehiculeDAO dd = new VehiculeDAO();
+        return dd.allVehicule();
     }
     public void insertVehicule(int VehiculeID,String marque,String modele) throws Exception{
         VehiculeDAO vehiculeDAO = new VehiculeDAO();

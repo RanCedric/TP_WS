@@ -13,30 +13,25 @@ import java.util.List;
  *
  * @author Beloha18
  */
-public class VehiculeDAO  {
-     public static List<ViewVehicule> allVehicule() throws Exception {
-        List<ViewVehicule> list = new ArrayList();
-        Connection con = null;
+public class VehiculeDAO extends DAO {
+     public List<ViewVehicule> allVehicule() throws Exception {
+        ArrayList<ViewVehicule> list = new ArrayList();
         try {
-            con = ConnectionPostgres.getConnectionPostgres();
-            list = allVehicule(con);
+            open();
+            list = (ArrayList<ViewVehicule>) allVehicule(conn);
+            close();
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        finally {
-            assert con != null;
-            con.close();
+            ERROR("VehiculeDAO.allVehicull",ex);
         }
         return list;
     }
-      public static List<ViewVehicule> allVehicule(Connection con) throws Exception {
+      public List<ViewVehicule> allVehicule(Connection con) throws Exception {
             List<ViewVehicule> list = new ArrayList<>();
         PreparedStatement stmt =  null;
         ResultSet res = null;
         int i = 0;
         try {
-            con = ConnectionPostgres.getConnectionPostgres();
-            stmt = con.prepareStatement("SELECT * FROM Vehicule");
+            stmt = conn.prepareStatement("SELECT * FROM Vehicule");
             res = stmt.executeQuery();
             while (res.next()){
                 int vehiculeID = res.getInt(1);
@@ -47,29 +42,22 @@ public class VehiculeDAO  {
                 i++;
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        finally {
-            assert stmt != null;
-            stmt.close();
-            assert res != null;
-            res.close();
+            ERROR("Vehicule.allVehicul",ex);
         }
         return list;
     }
       
-      public void insertVehicule  (Connection con,int VehiculeID,String marque,String modele) throws Exception{
+      public void insertVehicule  (int VehiculeID,String marque,String modele) throws Exception{
         PreparedStatement stmt = null;
         ResultSet res = null;
         try {
-            con = ConnectionPostgres.getConnectionPostgres();
-            stmt = con.prepareStatement("INSERT INTO Vehicule(id_vehicule,marque,modele) VALUES (?,?,?)");
+            stmt = conn.prepareStatement("INSERT INTO Vehicule(id_vehicule,marque,modele) VALUES (?,?,?)");
             stmt.setInt(1,VehiculeID);
             stmt.setString(2,marque);
             stmt.setString(3,modele);
             res = stmt.executeQuery();
         } catch (Exception e) {
-            e.printStackTrace();
+            ERROR("Vehicule.insertVehicule",e);
         }
         finally {
             assert stmt != null;
